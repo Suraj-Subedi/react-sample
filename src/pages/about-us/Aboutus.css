@@ -1,0 +1,137 @@
+.about-us-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+.aboutus {
+  text-align: center;
+  background-color: #007bff;
+  padding: 1.5rem;
+  font-size: 2rem;
+  color: white;
+}
+
+.aboutus-title {
+  padding: 0 1.5rem 4rem 1.5rem;
+  font-size: 1.2rem;
+  color: #333;
+  line-height: 1.8;
+}
+
+.vision-mission {
+  text-align: center;
+  background-color: #007bff;
+  padding: 1.5rem;
+  font-size: 1.5rem;
+  color: white;
+}
+
+.aboutus-main {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 2rem;
+  padding: 0 1.5rem;
+}
+
+.vision-mission-paragraph {
+  font-size: 1.2rem;
+  width: 70%;
+  line-height: 1.6;
+}
+
+.Namaste {
+  margin-left: 2rem;
+  width: 30%;
+}
+
+.vision-mission-img {
+  width: 100%;
+  height: auto;
+  border-radius: 10px;
+  transition: transform 0.3s ease-in-out;
+}
+
+.vision-mission-img:hover {
+  transform: scale(1.1);
+}
+
+.testimonials {
+  margin-top: 3rem;
+  text-align: center;
+  animation: fadeIn 1.5s ease-in-out 1s;
+}
+
+.testimonial-card {
+  background-color: #f9f9f9;
+  padding: 2rem;
+  margin-top: 2rem;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease-in-out;
+}
+
+.testimonial-card:hover {
+  transform: translateY(-10px);
+}
+
+.testimonial-icon {
+  font-size: 2rem;
+  color: #de9a46;
+  margin-bottom: 1rem;
+}
+
+.testimonial-text {
+  font-size: 1.2rem;
+  color: #333;
+  margin: 1rem 0;
+}
+
+.testimonial-author {
+  font-size: 1rem;
+  font-weight: bold;
+  color: #de9a46;
+}
+
+.image-gallery {
+  margin-top: 3rem;
+  text-align: center;
+}
+
+.image-slider {
+  display: flex;
+  justify-content: space-around;
+  margin-top: 2rem;
+}
+
+.image-slider img {
+  width: 30%;
+  border-radius: 10px;
+  transition: transform 0.3s ease-in-out;
+}
+
+.image-slider img:hover {
+  transform: scale(1.05);
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+
+    to {
+      opacity: 1;
+    }
+  }
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(20px);
+    opacity: 0;
+
+    to {
+      transform: translateY(0);
+      opacity: 1;
+    }
+  }
+}

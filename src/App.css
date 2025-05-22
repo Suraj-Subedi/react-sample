@@ -1,0 +1,163 @@
+.App {
+  text-align: center;
+}
+
+.App-logo {
+  height: 40vmin;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .App-logo {
+    animation: App-logo-spin infinite 20s linear;
+  }
+}
+
+.App-header {
+  background-color: #282c34;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
+}
+
+.App-link {
+  color: #61dafb;
+}
+
+@keyframes App-logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* table styling*/
+
+table {
+  border-collapse: collapse;
+  width: 100%;
+  padding: 10px;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+}
+
+th,
+td {
+  text-align: left;
+  padding: 8px;
+}
+
+tr {
+  border-bottom: 1px solid #ddd;
+  transition: background-color 0.3s ease;
+  height: 50px;
+}
+
+tr:nth-child(even) {
+  background-color: lightgray;
+}
+tr:hover {
+  background-color: #ddd;
+}
+th {
+  background-color: #007bff;
+  color: white;
+  height: 50px;
+  padding: 10px;
+  /* border-radius to first and last th */
+}
+
+th:first-child {
+  border-top-left-radius: 8px;
+}
+
+th:last-child {
+  border-top-right-radius: 8px;
+}
+
+.form-container {
+  max-width: 32rem;
+  margin: 2rem auto;
+  padding: 2rem;
+  border-radius: 0.75rem;
+  background-color: #fff;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+}
+
+.form-title {
+  font-size: 1.75rem;
+  font-weight: 700;
+  text-align: start;
+  margin-bottom: 2rem;
+  color: #1f2937;
+  background-color: transparent;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+/* Reusable input group */
+.input-root {
+  display: flex;
+  flex-direction: column;
+}
+
+.input-label {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #374151;
+  margin-bottom: 0.25rem;
+}
+
+.input {
+  padding: 0.75rem;
+  border: 1px solid #d1d5db;
+  border-radius: 0.5rem;
+  font-size: 1rem;
+  transition: border-color 0.2s ease;
+  width: 100%;
+}
+
+.input:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 1px #3b82f6;
+}
+
+.form-error {
+  font-size: 0.875rem;
+  color: #dc2626;
+  margin-top: 0.25rem;
+}
+
+.submit-button {
+  width: 100%;
+  padding: 0.75rem;
+  background-color: #3b82f6;
+  color: white;
+  border: none;
+  border-radius: 0.5rem;
+  font-weight: 600;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.submit-button:hover:not(:disabled) {
+  background-color: #2563eb;
+}
+
+.submit-button:disabled {
+  background-color: #e5e7eb;
+  color: #9ca3af;
+  cursor: not-allowed;
+}
