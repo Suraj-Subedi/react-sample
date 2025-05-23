@@ -10,7 +10,7 @@ const ProfileIcon = ({ logOut }) => {
 
   const handleMenuClick = (e) => {
     if (e.key == '1') {
-      navigate('/admin/login');
+      navigate('/login');
     }
     if (e.key == '2') {
 

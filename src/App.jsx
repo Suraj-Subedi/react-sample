@@ -32,7 +32,6 @@ function App() {
         <Route path="/contact-us" element={<ContactUs />} />
         <Route path="/gallery" element={<Gallery/>} />
         <Route path="/notices" element={<Notices/>} />
-        <Route path="/admin/login" element={<Login />} />
         <Route path="/all-posts" element={<Posts/>} />
         <Route path="/post/:id" element={<PostDetails />} />
          </Routes>

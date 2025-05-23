@@ -4,31 +4,26 @@ import * as Yup from 'yup';
 import './NoticesUpload.css';
 import { Button } from 'antd';
 import DeleteModal from '../../Components/DeleteModal';
+import { baseUrl } from '../../utils/constant';
+import toast from 'react-hot-toast';
 
 
 const NoticesSchema = Yup.object().shape({
   noticeTitle: Yup.string().required('Notice title is required'),
   noticeDescription: Yup.string().required('Notice description is required'),
-  uploadDate: Yup.date()
-    .required('Upload date is required')
-    .max(new Date(), 'Upload date cannot be in the future'),
+  noticeFile: Yup.mixed().required('File is required'),
 });
 
 const NoticesUpload = ({
   noticesList = [],
-  isLoading,
-  isSubmitting,
-  fetchNotices,
-  postNotices,
-  updateNotices,
-  deleteNotices,
+ onSuccess,
 }) => {
 
-  const [show, isShow] = useState(undefined);
+
   const [initialValues, setInitialValues] = useState({
     noticeTitle: '',
     noticeDescription: '',
-    uploadDate: '',
+    noticeFile:undefined,
   });
   const [editNoticeId, setEditNoticeId] = useState(null);
 
@@ -50,6 +45,45 @@ const NoticesUpload = ({
 
   }, [noticesList]);
 
+
+   const addNotice =async (values) => {
+    try{
+
+      const formData = new FormData();
+      formData.append('title', values.noticeTitle);
+      formData.append('description', values.noticeDescription);
+      formData.append('notice_file', values.noticeFile);
+         formData.append('token', localStorage.getItem('accessToken'))
+
+
+    var result=  await fetch(baseUrl+"addNotice.php",{
+        method:"POST",
+        headers: {
+          'Accept': 'application/json',
+
+        },
+        body:formData,
+      })
+
+      var data= await result.json();
+
+      if(data.success){
+        toast.success(data.message);
+        onSuccess();
+
+
+      }else{
+        toast.error(data.message);
+      }
+
+    }catch (error) {}
+  }
+
+
+
+
+
+
   return (
     <div className="notices-upload-container">
       <h2>{editNoticeId ? 'Edit Notice' : 'Upload Notices'}</h2>
@@ -57,14 +91,9 @@ const NoticesUpload = ({
         enableReinitialize={true}
         initialValues={initialValues}
         validationSchema={NoticesSchema}
-        onSubmit={(values, { resetForm }) => {
-          if (editNoticeId) {
-            dispatch(updateNotices({ values, id: editNoticeId }));
-            setEditNoticeId(null);
-          } else {
-            dispatch(postNotices({ values }));
-          }
-          resetForm();
+        onSubmit={async (values, { resetForm }) => {
+          await addNotice(values);
+
         }}
       >
         {({ setFieldValue, values }) => (
@@ -98,15 +127,29 @@ const NoticesUpload = ({
               />
             </div>
 
-            <div className="field-container">
-              <label htmlFor="uploadDate">Upload Date</label>
-              <Field type="date" name="uploadDate" value={values.uploadDate} />
+           {
+            //upload file
+           }
+              <div className="field-container">
+              <label htmlFor="noticeFile">Notice File (Image/Pdf)</label>
+              <Field
+                name="noticeFile"
+                type="file"
+                accept="image/*,application/pdf"
+                placeholder="Upload file"
+                value={undefined}
+                onChange={(event) => {
+                  const file = event.currentTarget.files[0];
+                  setFieldValue('noticeFile', file);
+                }}
+              />
               <ErrorMessage
-                name="uploadDate"
+                name="noticeFile"
                 component="div"
                 className="error-div"
               />
             </div>
+
 
             <button type="submit" className="submit-btn">
               {editNoticeId ? 'Update Notice' : 'Submit'}
@@ -114,49 +157,7 @@ const NoticesUpload = ({
           </Form>
         )}
       </Formik>
-      <div className="breaking-line2"></div>
-      <div className="notices-list-container">
-        <h2>Notices</h2>
-        {noticesList.length > 0 ? (
-          <ul className="notices-list">
-            {noticesList.map((notice) => (
-              <li key={notice.id} className="notices-list-item">
-                <div className="notice-details">
-                  <h4>{notice.noticeTitle}</h4>
-                  <p>{notice.noticeDescription}</p>
-                  <span>
-                    {new Date(notice.uploadDate).toLocaleDateString()}
-                  </span>
-                </div>
-                <div className="notice-actions">
-                  <Button
-                    type="primary"
-                    onClick={() => handleEdit(notice)}
-                    className="edit-btn"
-                  >
-                    Edit
-                  </Button>
-                  <Button
-                    color="danger"
-                    variant="filled"
-                    onClick={() => isShow(true)}
-                    className="delete-btn"
-                  >
-                    Delete
-                  </Button>
-                </div>
-                <DeleteModal
-                  isOpen={show}
-                  onClose={() => isShow(false)}
-                  onDelete={() => handleDelete(notice._id)}
-                />
-              </li>
-            ))}
-          </ul>
-        ) : (
-          <p>No notices available</p>
-        )}
-      </div>
+
     </div>
   );
 };
