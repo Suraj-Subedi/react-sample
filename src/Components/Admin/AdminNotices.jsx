@@ -7,6 +7,7 @@ import { Modal } from 'antd';
 const AdminNotices = () => {
   const [notices, setNotices] = useState([]);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+  const [selectedEditNotice, setSelectedEditNotice] = useState(null);
 
   useEffect(() => {
     fetchNotices();
@@ -42,25 +43,26 @@ const AdminNotices = () => {
         gap: '20px',
       }}
     >
-      <div style={{
-        display: 'flex',
-        justifyContent: 'space-between',
-      }}>
-
-      <h1>Notices</h1>
-      <button
-        onClick={() => setIsAddModalOpen(true)}
+      <div
         style={{
-          backgroundColor: '#4CAF50',
-          color: 'white',
-          padding: '10px 20px',
-          border: 'none',
-          borderRadius: '5px',
-          cursor: 'pointer',
+          display: 'flex',
+          justifyContent: 'space-between',
         }}
       >
-        Add Notice
-      </button>
+        <h1>Notices</h1>
+        <button
+          onClick={() => setIsAddModalOpen(true)}
+          style={{
+            backgroundColor: '#4CAF50',
+            color: 'white',
+            padding: '10px 20px',
+            border: 'none',
+            borderRadius: '5px',
+            cursor: 'pointer',
+          }}
+        >
+          Add Notice
+        </button>
       </div>
       <p
         style={{
@@ -81,6 +83,7 @@ const AdminNotices = () => {
               <th>Description</th>
               <th>Upload Date</th>
               <th>File</th>
+              <th>Actions</th>
             </tr>
           </thead>
           <tbody>
@@ -120,7 +123,6 @@ const AdminNotices = () => {
                           padding: '10px',
                         }}
                       >
-
                         <a
                           href={baseUrl + notice.file_url}
                           target="_blank"
@@ -134,21 +136,67 @@ const AdminNotices = () => {
                     )
                   }
                 </td>
+                <td>
+                  <div
+                    style={{
+                      display: 'flex',
+                      gap: '10px',
+                    }}
+                  >
+                    <button
+                      onClick={() => {
+                        setSelectedEditNotice(notice);
+                      }}
+                      style={{
+                        backgroundColor: '#2196F3',
+                        color: 'white',
+                        padding: '5px 10px',
+                        border: 'none',
+                        borderRadius: '5px',
+                        cursor: 'pointer',
+                      }}
+                    >
+                      Edit
+                    </button>
+                    <button
+                      onClick={() => {
+                        // Handle delete action
+                      }}
+                      style={{
+                        backgroundColor: '#f44336',
+                        color: 'white',
+                        padding: '5px 10px',
+                        border: 'none',
+                        borderRadius: '5px',
+                        cursor: 'pointer',
+                      }}
+                    >
+                      Delete
+                    </button>
+                  </div>
+                </td>
               </tr>
             ))}
           </tbody>
         </table>
       }
       <Modal
-        open={isAddModalOpen}
-        onCancel={() => setIsAddModalOpen(false)}
+        open={isAddModalOpen || selectedEditNotice}
+        onCancel={() => {
+          setIsAddModalOpen(false);
+          setSelectedEditNotice(null);
+        }}
         footer={null}
         width={600}
       >
-        <NoticesUpload onSuccess={()=>{
-          setIsAddModalOpen(false);
-          fetchNotices();
-        }} />
+        <NoticesUpload
+          notice={selectedEditNotice}
+          onSuccess={() => {
+            setIsAddModalOpen(false);
+            setSelectedEditNotice(null);
+            fetchNotices();
+          }}
+        />
       </Modal>
     </div>
   );

@@ -7,93 +7,99 @@ import DeleteModal from '../../Components/DeleteModal';
 import { baseUrl } from '../../utils/constant';
 import toast from 'react-hot-toast';
 
+const NoticesUpload = ({ notice, onSuccess }) => {
+  const handleDelete = (id) => {};
 
-const NoticesSchema = Yup.object().shape({
-  noticeTitle: Yup.string().required('Notice title is required'),
-  noticeDescription: Yup.string().required('Notice description is required'),
-  noticeFile: Yup.mixed().required('File is required'),
-});
-
-const NoticesUpload = ({
-  noticesList = [],
- onSuccess,
-}) => {
-
-
-  const [initialValues, setInitialValues] = useState({
-    noticeTitle: '',
-    noticeDescription: '',
-    noticeFile:undefined,
+  const NoticesSchema = Yup.object().shape({
+    noticeTitle: Yup.string().required('Notice title is required'),
+    noticeDescription: Yup.string().required('Notice description is required'),
+    // noticeFile: Yup.mixed().required('File is required'),
+    noticeFile: notice
+      ? Yup.mixed().optional()
+      : Yup.mixed().required('File is required'),
   });
-  const [editNoticeId, setEditNoticeId] = useState(null);
 
-  const handleEdit = (notice) => {
-    setEditNoticeId(notice._id);
-    const datePart = notice.uploadDate.split('T')[0];
-    setInitialValues({
-      noticeTitle: notice.noticeTitle,
-      noticeDescription: notice.noticeDescription,
-      uploadDate: datePart,
-    });
-  };
-
-  const handleDelete = (id) => {
-
-  };
-
-  useEffect(() => {
-
-  }, [noticesList]);
-
-
-   const addNotice =async (values) => {
-    try{
-
+  const addNotice = async (values) => {
+    try {
       const formData = new FormData();
       formData.append('title', values.noticeTitle);
       formData.append('description', values.noticeDescription);
       formData.append('notice_file', values.noticeFile);
-         formData.append('token', localStorage.getItem('accessToken'))
+      formData.append('token', localStorage.getItem('accessToken'));
 
-
-    var result=  await fetch(baseUrl+"addNotice.php",{
-        method:"POST",
+      var result = await fetch(baseUrl + 'addNotice.php', {
+        method: 'POST',
         headers: {
-          'Accept': 'application/json',
-
+          Accept: 'application/json',
         },
-        body:formData,
-      })
+        body: formData,
+      });
 
-      var data= await result.json();
+      var data = await result.json();
 
-      if(data.success){
+      if (data.success) {
         toast.success(data.message);
         onSuccess();
-
-
-      }else{
+      } else {
         toast.error(data.message);
       }
+    } catch (error) {
+      toast.error('An error occurred while uploading the notice.');
+    }
+  };
 
-    }catch (error) {}
-  }
+  const updateNotice = async (values) => {
+    try {
+      const formData = new FormData();
+      formData.append('title', values.noticeTitle);
+      formData.append('description', values.noticeDescription);
+      formData.append('token', localStorage.getItem('accessToken'));
+      formData.append('notice_id', notice.notice_id);
 
+      if (values.noticeFile) {
+        formData.append('notice_file', values.noticeFile);
+      }
 
+      var result = await fetch(baseUrl + 'updateNotice.php', {
+        method: 'POST',
+        headers: {
+          Accept: 'application/json',
+        },
+        body: formData,
+      });
 
+      var data = await result.json();
 
-
+      if (data.success) {
+        toast.success(data.message);
+        onSuccess();
+      } else {
+        toast.error(data.message);
+      }
+    } catch (error) {
+      toast.error('An error occurred while uploading the notice.');
+    }
+  };
 
   return (
     <div className="notices-upload-container">
-      <h2>{editNoticeId ? 'Edit Notice' : 'Upload Notices'}</h2>
+      <h2>{notice ? 'Edit Notice' : 'Upload Notices'}</h2>
       <Formik
+        initialValues={{
+          noticeTitle: notice?.title || '',
+          noticeDescription: notice?.description || '',
+          noticeFile: undefined,
+        }}
         enableReinitialize={true}
-        initialValues={initialValues}
+        validateOnMount={true}
         validationSchema={NoticesSchema}
         onSubmit={async (values, { resetForm }) => {
-          await addNotice(values);
-
+          if (notice) {
+            await updateNotice(values);
+          } else {
+            await addNotice(values);
+          }
+          resetForm();
         }}
       >
         {({ setFieldValue, values }) => (
@@ -127,10 +133,10 @@ const NoticesUpload = ({
               />
             </div>
 
-           {
-            //upload file
-           }
-              <div className="field-container">
+            {
+              //upload file
+            }
+            <div className="field-container">
               <label htmlFor="noticeFile">Notice File (Image/Pdf)</label>
               <Field
                 name="noticeFile"
@@ -150,14 +156,12 @@ const NoticesUpload = ({
               />
             </div>
 
-
             <button type="submit" className="submit-btn">
-              {editNoticeId ? 'Update Notice' : 'Submit'}
+              {notice ? 'Update Notice' : 'Submit'}
             </button>
           </Form>
         )}
       </Formik>
-
     </div>
   );
 };

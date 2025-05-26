@@ -2,8 +2,11 @@
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import './Contactus.css';
+import React from 'react';
+import { baseUrl } from '../../utils/constant';
+import toast from 'react-hot-toast';
 
-const ContactUs = ({ isLoading, isSubmitting, submitContactusForm }) => {
+const ContactUs = ( ) => {
 
 
   const initialValues = {
@@ -24,10 +27,42 @@ const ContactUs = ({ isLoading, isSubmitting, submitContactusForm }) => {
     message: Yup.string().required('Message is required'),
   });
 
-  const handleSubmit = (values, { resetForm }) => {
-    dispatch(submitContactusForm({ values }));
-    resetForm();
-  };
+   const addInquiry =async (values,onSuccess) => {
+    try{
+
+      const formData = new FormData();
+      formData.append('first_name', values.firstName);
+      formData.append('last_name', values.lastName);
+      formData.append('email', values.email);
+      formData.append('phone_number', values.phone);
+      formData.append('message', values.message);
+
+
+    var result=  await fetch(baseUrl+"addInquiry.php",{
+        method:"POST",
+        headers: {
+          'Accept': 'application/json',
+
+        },
+        body:formData,
+      })
+
+      var data= await result.json();
+
+      if(data.success){
+        toast.success(data.message);
+        if(onSuccess) {
+          onSuccess();
+        }
+      }else{
+        toast.error(data.message);
+      }
+
+    }catch (error) {
+      console.error(error);
+      toast.error('An error occurred while uploading the notice.');
+    }
+  }
 
   return (
     <div className="contact-form-main">
@@ -36,7 +71,13 @@ const ContactUs = ({ isLoading, isSubmitting, submitContactusForm }) => {
         <Formik
           initialValues={initialValues}
           validationSchema={validationSchema}
-          onSubmit={handleSubmit}
+          onSubmit={async (values, { setSubmitting, resetForm }) => {
+            addInquiry(values, () => {
+              resetForm();
+            }
+            )
+          }}
+
         >
           {({ isSubmitting }) => (
             <Form className="contact-form">
