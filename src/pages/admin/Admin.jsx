@@ -18,7 +18,7 @@ import AdminNotices from '../../Components/Admin/AdminNotices';
 const Admin = ({ me, permissions, fetchPermission }) => {
   const searchParams = useSearchParams();
   const navigate = useNavigate();
-  const [page, setPage] = useState(searchParams[0].get('page') || 'dashboard');
+  const [page, setPage] = useState(searchParams[0].get('tab') || 'dashboard');
 
   useEffect(() => {
     const token = localStorage.getItem('accessToken');
@@ -82,7 +82,7 @@ const Admin = ({ me, permissions, fetchPermission }) => {
                 className="sidebar-items"
                 onClick={() => {
                   setPage(route.key);
-                  navigate(`/admin?page=${route.key}`);
+                  navigate(`/admin?tab=${route.key}`);
                 }}
                 style={{
                   display: 'flex',
