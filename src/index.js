@@ -5,6 +5,7 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import Layout from './Layout';
 import { BrowserRouter } from 'react-router-dom';
+import { ConfigProvider } from 'antd';
 
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
@@ -12,7 +13,19 @@ root.render(
   <React.StrictMode>
       <BrowserRouter>
         <Layout>
+          <ConfigProvider theme={{
+            components:{
+              Pagination: {
+                itemSize: 32,
+                size: 32,
+                colorBorder: '#d9d9d9',
+                colorPrimary: '#1677ff',
+
+              },
+            }
+          }}>
           <App />
+          </ConfigProvider>
         </Layout>
       </BrowserRouter>
   </React.StrictMode>

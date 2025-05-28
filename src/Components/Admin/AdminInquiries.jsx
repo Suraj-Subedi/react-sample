@@ -78,6 +78,7 @@ const AdminInquiries = () => {
           /> */}
           <Pagination
             current={parseInt(page)}
+            pageSize={parseInt(pageSize)}
             total={Math.ceil(total / parseInt(pageSize)) * parseInt(pageSize)}
             onChange={(page, pageSize) => {
               const params = new URLSearchParams(searchParams[0]);
@@ -89,7 +90,11 @@ const AdminInquiries = () => {
             }}
             showSizeChanger={true}
             pageSizeOptions={['5', '10', '20', '30']}
-            style={{ marginBottom: '20px' }}
+            style={{
+              marginBottom: '20px',
+              display: 'flex',
+              justifyContent: 'end',
+            }}
           />
           <table>
             <thead>
@@ -125,6 +130,26 @@ const AdminInquiries = () => {
               ))}
             </tbody>
           </table>
+          <Pagination
+            current={parseInt(page)}
+            total={Math.ceil(total / parseInt(pageSize)) * parseInt(pageSize)}
+            onChange={(page, pageSize) => {
+              const params = new URLSearchParams(searchParams[0]);
+              params.set('page', page);
+              params.set('page_size', pageSize);
+              navigate(`/admin?${params.toString()}`, {
+                replace: true,
+              });
+            }}
+            pageSize={parseInt(pageSize)}
+            showSizeChanger={true}
+            pageSizeOptions={['5', '10', '20', '30']}
+            style={{
+              marginBottom: '20px',
+              display: 'flex',
+              justifyContent: 'end',
+            }}
+          />
         </>
       }
     </div>

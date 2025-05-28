@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { baseUrl } from '../../utils/constant';
-import { useLocation, useSearchParams } from 'react-router-dom';
+import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 import NoticesUpload from '../../pages/admin/NoticesUpload';
-import { Modal, Popconfirm } from 'antd';
+import { Modal, Pagination, Popconfirm } from 'antd';
 import toast from 'react-hot-toast';
 import AppPagination from '../Pagination/Pagination';
 
@@ -12,8 +12,11 @@ const AdminNotices = () => {
   const [selectedEditNotice, setSelectedEditNotice] = useState(null);
   const [deleteNoticeId, setDeleteNoticeId] = useState(null);
   const location = useLocation();
-
-  console.log(location.key);
+  const searchParams = useSearchParams();
+  const page = searchParams[0].get('page') || 1;
+  const pageSize = searchParams[0].get('page_size') || 10;
+  const [total, setTotalData] = useState(0);
+  const navigate = useNavigate();
 
   useEffect(() => {
     fetchNotices();
@@ -24,15 +27,19 @@ const AdminNotices = () => {
       const formData = new FormData();
       formData.append('token', localStorage.getItem('accessToken'));
 
-      var result = await fetch(baseUrl + 'getNotice.php', {
-        method: 'POST',
-        body: formData,
-      });
+      var result = await fetch(
+        baseUrl + 'getNotice.php' + '?' + searchParams[0].toString(),
+        {
+          method: 'POST',
+          body: formData,
+        }
+      );
 
       var data = await result.json();
 
       if (data.success) {
         setNotices(data.data);
+        setTotalData(data?.total);
       } else {
         toast.error(data.message);
       }
@@ -108,10 +115,25 @@ const AdminNotices = () => {
       </p>
       {
         <>
-          <AppPagination
-            onPageChange={() => {}}
-            currentPage={1}
-            totalPages={10}
+          <Pagination
+            current={parseInt(page)}
+            pageSize={parseInt(pageSize)}
+            total={Math.ceil(total / parseInt(pageSize)) * parseInt(pageSize)}
+            onChange={(page, pageSize) => {
+              const params = new URLSearchParams(searchParams[0]);
+              params.set('page', page);
+              params.set('page_size', pageSize);
+              navigate(`/admin?${params.toString()}`, {
+                replace: true,
+              });
+            }}
+            showSizeChanger={true}
+            pageSizeOptions={['5', '10', '20', '30']}
+            style={{
+              marginBottom: '20px',
+              display: 'flex',
+              justifyContent: 'end',
+            }}
           />
           <table>
             <thead>
@@ -228,6 +250,26 @@ const AdminNotices = () => {
               ))}
             </tbody>
           </table>
+          <Pagination
+            current={parseInt(page)}
+            pageSize={parseInt(pageSize)}
+            total={Math.ceil(total / parseInt(pageSize)) * parseInt(pageSize)}
+            onChange={(page, pageSize) => {
+              const params = new URLSearchParams(searchParams[0]);
+              params.set('page', page);
+              params.set('page_size', pageSize);
+              navigate(`/admin?${params.toString()}`, {
+                replace: true,
+              });
+            }}
+            showSizeChanger={true}
+            pageSizeOptions={['5', '10', '20', '30']}
+            style={{
+              marginBottom: '20px',
+              display: 'flex',
+              justifyContent: 'end',
+            }}
+          />
         </>
       }
       <Modal
