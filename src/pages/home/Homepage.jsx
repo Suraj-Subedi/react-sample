@@ -6,6 +6,8 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/css';
 import { useNavigate } from 'react-router-dom';
 import { Button } from 'antd';
+import { baseUrl } from '../../utils/constant';
+import toast from 'react-hot-toast';
 
 const Homepage = ({
   fetchDashboardAnalytics,
@@ -15,6 +17,29 @@ const Homepage = ({
 }) => {
   const [teachers, setTeachers] = useState([]);
   const navigate = useNavigate();
+  const [notices, setNotices] = useState(undefined);
+
+  const fetchNotices = async () => {
+    try {
+      const formData = new FormData();
+      formData.append('token', localStorage.getItem('accessToken'));
+
+      var result = await fetch(baseUrl + 'getNotice.php?page=1&page_size=2', {
+        method: 'POST',
+        body: formData,
+      });
+
+      var data = await result.json();
+
+      if (data.success) {
+        setNotices(data.data);
+      } else {
+        toast.error(data.message);
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   useEffect(() => {
     setTeachers([
@@ -30,7 +55,9 @@ const Homepage = ({
 
   const [dashboardAnalytics, setDashboardAnalytics] = useState(undefined);
 
-  useEffect(() => {}, []);
+  useEffect(() => {
+    fetchNotices();
+  }, []);
 
   return (
     <div className="homepage-container">
@@ -56,32 +83,98 @@ const Homepage = ({
       <section className="posts-container">
         <div className="posts">
           <h2 className="section-title">Latest Posts</h2>
-          {posts?.length > 0 &&
-            posts?.map((post, index) => {
-              if (index < 3) {
-                return (
-                  <div key={post._id} className="post">
-                    <img
-                      src={post.postImageUrl[0]}
-                      alt={`Error while showing image.`}
-                      className="post-img"
+          {notices?.map((notice) => {
+            const isTypePdf =
+              notice.file_url && notice.file_url.endsWith('.pdf');
+            const fullFileUrl = baseUrl + notice.file_url;
+            //if not pdf then it is image
+            return (
+              <div
+                key={notice.id}
+                style={{
+                  border: '1px solid #ccc',
+                  borderRadius: '8px',
+                  padding: '20px',
+                  marginBottom: '20px',
+                  backgroundColor: '#fff',
+                  boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: '10px',
+                }}
+              >
+                {/* <h2>{notice.title}</h2>
+                     }
+                       {/* <h2>{notice.title}</h2>
+                     <p className="notice-date">Date: {notice.created_at}</p>
+                     <p>{notice.description}</p> */}
+                <h2>{notice.title}</h2>
+                <p
+                  style={{
+                    color: '#555',
+                    fontSize: '14px',
+                    fontWeight: 'bold',
+                    margin: '5px 0',
+                  }}
+                >
+                  Posted on: {new Date(notice.created_at).toLocaleDateString()}
+                </p>
+                <p>{notice.description}</p>
+                {isTypePdf ? (
+                  // <a
+                  //   href={fullFileUrl}
+                  //   target="_blank"
+                  //   rel="noopener noreferrer"
+                  //   className="notice-link"
+                  // >
+                  //   Read PDF File
+                  // </a>
+
+                  <div>
+                    <p className="notice-link">
+                      <a
+                        href={fullFileUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        Open in Full Screen
+                      </a>
+                    </p>
+                    <br />
+                    <iframe
+                      src={fullFileUrl}
+                      title={notice.title}
+                      style={{
+                        width: '100%',
+                        height: '800px',
+                        border: 'none',
+                      }}
                     />
-                    <p className="post-title">{post.postTitle[0]}</p>
-                    <p className="post-text">{post.postContent[0]}</p>
-                    <ReadmoreButton post={post} />
                   </div>
-                );
-              }
-            })}
+                ) : (
+                  <img
+                    src={fullFileUrl}
+                    alt={notice.title}
+                    style={{
+                      width: '100%',
+                      height: 'auto',
+                      maxHeight: '400px',
+                      objectFit: 'contain',
+                    }}
+                  />
+                )}
+              </div>
+            );
+          })}
           <Button
             style={{
               position: 'absolute',
               right: '1rem',
             }}
-            onClick={() => navigate('/all-posts')}
+            onClick={() => navigate('/notices')}
             type="primary"
           >
-            Show all posts
+            View all notices
           </Button>
         </div>
 
@@ -167,6 +260,7 @@ const Homepage = ({
             disableOnInteraction: false,
           }}
           effect="fade"
+          className="testimonial-swiper"
         >
           {teachers.map((teacher, index) => (
             <SwiperSlide key={index} className="testimonial-card">

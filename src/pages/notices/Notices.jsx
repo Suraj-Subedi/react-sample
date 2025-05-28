@@ -2,28 +2,39 @@ import React, { useState, useEffect } from 'react';
 import './Notices.css';
 import { baseUrl } from '../../utils/constant';
 import toast from 'react-hot-toast';
+import { Pagination } from 'antd';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 
 const Notices = () => {
   const [notices, setNotices] = useState(undefined);
+  const [total, setTotal] = useState(0);
+  const searchParams = useSearchParams();
+  const page = searchParams[0].get('page') || '1';
+  const pageSize = searchParams[0].get('page_size') || '10';
+  const navigate = useNavigate();
 
   useEffect(() => {
     fetchNotices();
-  }, []);
+  }, [page, pageSize]);
 
   const fetchNotices = async () => {
     try {
       const formData = new FormData();
       formData.append('token', localStorage.getItem('accessToken'));
 
-      var result = await fetch(baseUrl + 'getNotice.php', {
-        method: 'POST',
-        body: formData,
-      });
+      var result = await fetch(
+        baseUrl + 'getNotice.php' + `?page=${page}&page_size=${pageSize}`,
+        {
+          method: 'POST',
+          body: formData,
+        }
+      );
 
       var data = await result.json();
 
       if (data.success) {
         setNotices(data.data);
+        setTotal(data.total);
       } else {
         toast.error(data.message);
       }
@@ -125,6 +136,24 @@ const Notices = () => {
               </div>
             );
           })}
+          <Pagination
+            current={parseInt(page)}
+            pageSize={parseInt(pageSize)}
+            total={Math.ceil(total / parseInt(pageSize)) * parseInt(pageSize)}
+            onChange={(page, pageSize) => {
+              const params = new URLSearchParams(searchParams[0]);
+              params.set('page', page);
+              params.set('page_size', pageSize);
+              navigate(`/notices?${params.toString()}`, {
+                replace: true,
+              });
+            }}
+            style={{
+              marginBottom: '20px',
+              display: 'flex',
+              justifyContent: 'end',
+            }}
+          />
         </main>
       </div>
     </div>

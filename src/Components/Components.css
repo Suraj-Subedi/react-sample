@@ -37,6 +37,14 @@
   font-size: 1.8rem;
   font-weight: bold;
   text-transform: uppercase;
+
+  @media screen and (max-width: 768px) {
+    font-size: 1.5rem;
+  }
+
+  @media screen and (max-width: 480px) {
+    font-size: 1.2rem;
+  }
 }
 
 /* Menu Items */
@@ -124,6 +132,10 @@
   display: flex;
   justify-content: space-between;
   padding: 2rem;
+  gap: 2rem;
+
+  /* responsive footer */
+  flex-wrap: wrap;
 }
 
 .footer-logo {
