@@ -10,13 +10,13 @@ const CarouselHome = () => (
   <>
     <Carousel arrows infinite={true} autoplay={true} autoplaySpeed={2000}>
       <div style={{ width: '100%' }}>
-        <img src="/school1.jpg" alt="preview" className="carousal-img" />
+        <img src="./school1.jpg" alt="preview" className="carousal-img" />
       </div>
       <div style={{ width: '100%' }}>
-        <img src="/post1.jpg" className="carousal-img" />
+        <img src="./post1.jpg" className="carousal-img" />
       </div>
       <div style={{ width: '100%' }}>
-        <img src="/post4.jpg" className="carousal-img" />
+        <img src="./post4.jpg" className="carousal-img" />
       </div>
     </Carousel>
   </>

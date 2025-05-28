@@ -30,10 +30,7 @@ const Homepage = ({
 
   const [dashboardAnalytics, setDashboardAnalytics] = useState(undefined);
 
-  useEffect(() => {
-
-
-  }, []);
+  useEffect(() => {}, []);
 
   return (
     <div className="homepage-container">
@@ -110,7 +107,7 @@ const Homepage = ({
           <div className="principal-message">
             <div className="message-header">
               <img
-                src="/profile.png"
+                src="./profile.png"
                 alt="Principal"
                 className="message-image"
               />
@@ -127,7 +124,7 @@ const Homepage = ({
           {/* Vice Principal's Message */}
           <div className="vice-principal-message">
             <div className="message-header">
-              <img src="/profile.png" className="message-image" />
+              <img src="./profile.png" className="message-image" />
               <h2>Message from the Vice Principal</h2>
             </div>
             <p>
@@ -144,14 +141,14 @@ const Homepage = ({
             <section className="vision-mission-section">
                 <div className="vision">
                     <h2>Our Vision</h2>
-                    <img src="/vision.jpg" alt="Vision" className="animated-image" />
+                    <img src="./vision.jpg" alt="Vision" className="animated-image" />
                     <p>
                         Our vision is to create a learning environment where students excel academically and develop essential life skills.
                     </p>
                 </div>
                 <div className="mission">
                     <h2>Our Mission</h2>
-                    <img src="/mission.jpg" alt="Mission" className="animated-image" />
+                    <img src="./mission.jpg" alt="Mission" className="animated-image" />
                     <p>
                         Our mission is to provide quality education and inspire students to become responsible citizens and leaders.
                     </p>
@@ -200,4 +197,4 @@ const mapStateToProps = ({
   posts,
 });
 
-export default Homepage
+export default Homepage;

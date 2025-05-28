@@ -3,7 +3,6 @@ import NavItem from './Dropdown';
 import './Components.css';
 import ProfileIcon from './ProfileIcon';
 
-
 const isAuthenticated = sessionStorage.getItem('accessToken');
 
 const Navbar = ({ isLoading, isSubmitting, logOut }) => {
@@ -48,12 +47,15 @@ const Navbar = ({ isLoading, isSubmitting, logOut }) => {
   ];
 
   return (
-    <div className="nav-container" style={{
-      zIndex: 1000,
-    }}>
+    <div
+      className="nav-container"
+      style={{
+        zIndex: 1000,
+      }}
+    >
       {/* Logo Section */}
       <div className="logo-div">
-        <img src="/schoollogo.png" className="logo-img" alt="Logo" />
+        <img src="./schoollogo.png" className="logo-img" alt="Logo" />
         <h1 className="logo-title">Your School</h1>
       </div>
 
@@ -98,6 +100,5 @@ const Navbar = ({ isLoading, isSubmitting, logOut }) => {
     </div>
   );
 };
-
 
 export default Navbar;

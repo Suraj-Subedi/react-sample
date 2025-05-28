@@ -30,7 +30,7 @@ const AboutUs = () => {
 
         <div className="Namaste">
           <img
-            src="/post3.jpg"
+            src="./post3.jpg"
             className="vision-mission-img"
             alt="School Event"
           />
@@ -53,13 +53,13 @@ const AboutUs = () => {
       <div className="image-gallery">
         <h2>Gallery</h2>
         <div className="image-slider">
-          <img src="/post1.jpg" alt="Gallery 1" />
-          <img src="/post2.jpg" alt="Gallery 2" />
-          <img src="/post3.jpg" alt="Gallery 3" />
+          <img src="./post1.jpg" alt="Gallery 1" />
+          <img src="./post2.jpg" alt="Gallery 2" />
+          <img src="./post3.jpg" alt="Gallery 3" />
         </div>
       </div>
     </div>
   );
 };
 
-export default AboutUs
+export default AboutUs;
